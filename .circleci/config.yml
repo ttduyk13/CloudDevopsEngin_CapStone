@@ -37,6 +37,7 @@ commands:
           command: |
             make setup
             pwd
+            ls 
   access-venv:
     steps:
       - run:
@@ -44,6 +45,7 @@ commands:
           command: |
             . ~/.devops/bin/activate
             pwd
+            ls
   install-ansible:
     steps:
       - run:
@@ -92,9 +94,8 @@ jobs:
           keys: [raw-build]
       - access-venv
       - run:
-          name: lint check
+          name: lint and test check
           command: |
-            
             make lint
             make test
 
