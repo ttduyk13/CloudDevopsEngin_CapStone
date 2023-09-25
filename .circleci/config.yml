@@ -87,6 +87,8 @@ jobs:
       - image: cimg/python:3.7
     steps:
       - checkout
+      - restore_cache:
+          keys: [raw-build]
       - access-venv
       - run:
           name: lint check
@@ -107,7 +109,7 @@ jobs:
           command: |
             export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
             echo "cluster name: ${CLUSTER_NAME}"
-            echo ${aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1}
+            echo $(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1)
             cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
             echo $cluster_info
 
