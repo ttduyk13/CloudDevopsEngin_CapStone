@@ -93,6 +93,7 @@ jobs:
       - run:
           name: lint check
           command: |
+            pwd
             make lint
             make test
 
