@@ -118,8 +118,6 @@ workflows:
   default:
     jobs:
       - configure-cluster
-      - test-build
-      - build_docker:
-          requires: [test-build, configure-cluster]
-      - deploy-app:
-          requires: [build_docker]
+      - build
+      - test:
+          requires: [build]
