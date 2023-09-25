@@ -36,13 +36,14 @@ commands:
           name: Setup venv
           command: |
             make setup
-            ls ~/.devops
+            pwd
   access-venv:
     steps:
       - run:
           name: Access venv
           command: |
             . ~/.devops/bin/activate
+            pwd
   install-ansible:
     steps:
       - run:
@@ -93,7 +94,7 @@ jobs:
       - run:
           name: lint check
           command: |
-            pwd
+            
             make lint
             make test
 
