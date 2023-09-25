@@ -41,7 +41,7 @@ commands:
       - run:
           name: Access venv
           command: |
-            . ~/.devops/Scripts/activate
+            . ~/.devops/bin/activate
   install-ansible:
     steps:
       - run:
@@ -108,6 +108,7 @@ jobs:
             echo "cluster name: ${CLUSTER_NAME}"
             aws --version
             cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
+            echo $cluster_info
 
             if [[ $cluster_info ]]; then
                 echo "The cluster $CLUSTER_NAME does not exist"
