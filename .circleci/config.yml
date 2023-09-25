@@ -117,7 +117,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - configure-cluster
+      - setup-cluster
       - build
       - test:
           requires: [build]
