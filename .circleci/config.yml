@@ -101,18 +101,18 @@ jobs:
       - install-kubectl
       - install-eksctl
       - run:
-        name: Setup eks
-        command: |
-          export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
-          cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
+          name: Setup eks
+          command: |
+            export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
+            cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
 
-          if [[ $cluster_info ]]; then
-              echo "The cluster $CLUSTER_NAME does not exist"
-              eksctl create cluster -f .circleci/cluster/cluster.yml
-              kubectl get nodes
-          else
-              echo "The cluster $CLUSTER_NAME exists"  
-          fi
+            if [[ $cluster_info ]]; then
+                echo "The cluster $CLUSTER_NAME does not exist"
+                eksctl create cluster -f .circleci/cluster/cluster.yml
+                kubectl get nodes
+            else
+                echo "The cluster $CLUSTER_NAME exists"  
+            fi
 
   build-docker:
     docker:
