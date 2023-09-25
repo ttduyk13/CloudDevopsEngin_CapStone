@@ -16,19 +16,19 @@ commands:
           name: Install kubectl
           command: |
             curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.26.8/2023-09-14/bin/linux/amd64/kubectl
-            sudo mv hadolint-Linux-x86_64 /usr/local/bin/hadolint
-            sudo +x /usr/local/bin/hadolint
-            hadolint --version
+            chmod +x ./kubectl
+            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+            echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+            kubectl version --short --client
   install-hadolint:
     steps:
       - run:
           name: Install hadolint
           command: |
             curl -O https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-            chmod +x ./kubectl
-            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
-            echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
-            kubectl version --short --client
+            sudo mv hadolint-Linux-x86_64 /usr/local/bin/hadolint
+            sudo +x /usr/local/bin/hadolint
+            hadolint --version
   install-eksctl:
     steps:
       - run:
