@@ -1,18 +1,27 @@
 #!/usr/bin/env bash
-# This file tags and uploads an image to Docker Hub
 
-# Assumes that an image is built via `run_docker.sh`
+# build a docker image
+echo "Build docker image"
+IMAGE_NAME="duytt10-clouddevopsengin-capstone:latest"
+docker build -t $IMAGE_NAME .
 
-# Step 1:
-# Create dockerpath
-dockerpath="leok13/duytt10-clouddevopsengin-project4"
+# Authenticate to your default registry
+ECR_URL="142774831706.dkr.ecr.us-east-1.amazonaws.com"
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URL
 
-# Step 2:  
-# Authenticate & tag
-docker login
-docker tag duytt10-clouddevopsengin-project4 $dockerpath
-echo "Docker ID and Image: $dockerpath"
+export REPO_NAME="duytt10-clouddevopsengin-capstone"
+repository_info=$(aws ecr describe-repositories --repository-names $REPO_NAME --region us-east-1 2>&1
+if [[ $repository_info ]]; then
+    echo "The repo $REPO_NAME does not exist"
+    aws ecr create-repository \
+        --repository-name $REPO_NAME \
+        --image-scanning-configuration scanOnPush=true \
+        --region us-east-1
+else
+    echo "The repo $REPO_NAME exists"  
+fi
 
-# Step 3:
-# Push image to a docker repository
-docker push $dockerpath
+# Push an image to Amazon ECR'
+docker images
+docker tag $IMAGE_NAME ${ECR_URL}/${REPO_NAME}
+docker push ${ECR_URL}/${REPO_NAME}

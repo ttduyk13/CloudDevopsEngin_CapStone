@@ -41,7 +41,12 @@ commands:
           name: Access venv
           command: |
             . ~/.devops/Scripts/activate
-
+  install-ansible:
+    steps:
+      - run:
+          name: Install ansible
+          command: |
+            sudo apt-get install -y ansible
   destroy-environment:
     parameters:
       workflow_id:
@@ -85,6 +90,7 @@ jobs:
           name: lint check
           command: |
             make lint
+            make test
 
   setup-cluster:
     docker:
@@ -97,19 +103,27 @@ jobs:
       - run:
         name: Setup eks
         command: |
-          export CLUSTER_NAME="DuyTT10-capstone-cluster"
+          export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
           cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
 
           if [[ $cluster_info ]]; then
               echo "The cluster $CLUSTER_NAME does not exist"
-              eksctl create cluster -f eks-cluster/cluster.yaml
+              eksctl create cluster -f .circleci/cluster/cluster.yml
               kubectl get nodes
           else
               echo "The cluster $CLUSTER_NAME exists"  
           fi
 
+  build-docker:
+    docker:
+      - image: cimg/python:3.7.3
+    steps:
+      - checkout
+      - run:
+          name: docker with aws ecr
+          command: |
+           bash upload_docker.sh
 
-  
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
