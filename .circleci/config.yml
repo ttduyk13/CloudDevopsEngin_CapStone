@@ -96,6 +96,8 @@ jobs:
       - run:
           name: lint and test check
           command: |
+            pwd
+            ls
             make lint
             make test
 
