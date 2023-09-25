@@ -104,6 +104,7 @@ jobs:
           name: Setup eks
           command: |
             export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
+            echo "cluster name: ${CLUSTER_NAME}"
             cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
 
             if [[ $cluster_info ]]; then
