@@ -9,6 +9,7 @@ commands:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
+            aws --version
   install-kubectl:
     steps:
       - run:
@@ -106,7 +107,7 @@ jobs:
           command: |
             export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
             echo "cluster name: ${CLUSTER_NAME}"
-            aws --version
+            echo ${aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1}
             cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
             echo $cluster_info
 
