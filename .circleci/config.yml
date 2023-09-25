@@ -26,8 +26,8 @@ commands:
           name: Install hadolint
           command: |
             curl -O https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+            chmod +x hadolint-Linux-x86_64
             mkdir -p $HOME/bin && cp hadolint-Linux-x86_64 $HOME/bin/hadolint && export PATH=$HOME/bin:$PATH
-            chmod +x /usr/local/bin/hadolint
             echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
             hadolint --version
   install-eksctl:
