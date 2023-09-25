@@ -1,47 +1,125 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/orb-intro/
-orbs:
-  # The python orb contains a set of prepackaged CircleCI configuration you can use repeatedly in your configuration files
-  # Orb commands and jobs help you with common scripting around a language/tool
-  # so you dont have to copy and paste it everywhere.
-  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
-  python: circleci/python@1.5.0
+commands:
+  install-awscli:
+    steps:
+      - run:
+          name: Install awscli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+  install-kubectl:
+    steps:
+      - run:
+          name: Install kubectl
+          command: |
+            curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.26.8/2023-09-14/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+            echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+            kubectl version --short --client
+  install-eksctl:
+    steps:
+      - run:
+          name: Install eksctl 
+          command: |
+            ARCH=amd64
+            PLATFORM=$(uname -s)_$ARCH
+            curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+            tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+            sudo mv /tmp/eksctl /usr/local/bin
+  setup-venv:
+    steps:
+      - run:
+          name: Setup venv
+          command: |
+            make setup
+  access-venv:
+    steps:
+      - run:
+          name: Access venv
+          command: |
+            . ~/.devops/Scripts/activate
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/configuration-reference/#jobs
+  destroy-environment:
+    parameters:
+      workflow_id:
+        type: string
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack \
+            --stack-name udapeople-backend-<<parameters.workflow_id>>
+            aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
+            aws cloudformation delete-stack \
+            --stack-name udapeople-frontend-<<parameters.workflow_id>>
+
 jobs:
-  build-and-test: # This is the name of the job, feel free to change it to better match what you're trying to do!
-    # These next lines defines a Docker executors: https://circleci.com/docs/executor-types/
-    # You can specify an image from Dockerhub or use one of the convenience images from CircleCI's Developer Hub
-    # A list of available CircleCI Docker convenience images are available here: https://circleci.com/developer/images/image/cimg/python
-    # The executor is the environment in which the steps below will be executed - below will use a python 3.10.2 container
-    # Change the version below to your required version of python
+  build:
     docker:
-      - image: cimg/python:3.10.2
-    # Checkout the code as the first step. This is a dedicated CircleCI step.
-    # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
-    # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
-    # Then run your tests!
-    # CircleCI will report the results back to your VCS provider.
+      - image: cimg/python:3.7.3
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
-          # app-dir: ~/project/package-directory/  # If your requirements.txt isn't in the root directory.
-          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - restore_cache:
+          keys: [raw-build]
+      - setup-venv
+      - access-venv
       - run:
-          name: Run tests
-          # This assumes pytest is installed via the install-package step above
-          command: pytest
+          name: install
+          command: |
+            make install
+      - save_cache:
+          paths: [~/.devops]
+          key: raw-build
+
+  test:
+    docker:
+      - image: cimg/python:3.7.3
+    steps:
+      - checkout
+      - access-venv
+      - run:
+          name: lint check
+          command: |
+            make lint
+
+  setup-cluster:
+    docker:
+      - image: cimg/python:3.7.3
+    steps:
+      - checkout
+      - install-awscli
+      - install-kubectl
+      - install-eksctl
+      - run:
+        name: Setup eks
+        command: |
+          export CLUSTER_NAME="DuyTT10-capstone-cluster"
+          cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
+
+          if [[ $cluster_info ]]; then
+              echo "The cluster $CLUSTER_NAME does not exist"
+              eksctl create cluster -f eks-cluster/cluster.yaml
+              kubectl get nodes
+          else
+              echo "The cluster $CLUSTER_NAME exists"  
+          fi
+
+
+  
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
+
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  default:
     jobs:
-      - build-and-test
+      - configure-cluster
+      - test-build
+      - build_docker:
+          requires: [test-build, configure-cluster]
+      - deploy-app:
+          requires: [build_docker]
