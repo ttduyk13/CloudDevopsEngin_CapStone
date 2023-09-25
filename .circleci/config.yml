@@ -22,7 +22,7 @@ commands:
   install-eksctl:
     steps:
       - run:
-          name: Install eksctl 
+          name: Install eksctl
           command: |
             ARCH=amd64
             PLATFORM=$(uname -s)_$ARCH
@@ -122,8 +122,7 @@ jobs:
       - run:
           name: docker with aws ecr
           command: |
-           bash upload_docker.sh
-
+            bash upload_docker.sh
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
