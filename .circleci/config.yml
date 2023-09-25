@@ -107,9 +107,8 @@ jobs:
       - run:
           name: lint and test check
           command: |
-            pwd
-            ls
             make lint
+            ls ./app/
             make test
 
   setup-cluster:
