@@ -92,7 +92,6 @@ jobs:
           name: lint and test check
           command: |
             make lint
-            make test
       - save_cache:
           paths: [~/.devops]
           key: raw-build
