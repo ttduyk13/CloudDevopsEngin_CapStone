@@ -111,7 +111,6 @@ jobs:
           command: |
             export CLUSTER_NAME="duytt10-clouddevopsengin-capstone-cluster"
             echo "cluster name: ${CLUSTER_NAME}"
-            echo $(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1)
             cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException")
             echo $cluster_info
 
