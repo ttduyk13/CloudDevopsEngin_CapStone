@@ -19,7 +19,7 @@ vpc:
       us-east-1b:
         id: subnet-07b74143bb3dafdef
 
-nodeGroups:
+managedNodeGroups:
   - name: P5-ng-1
     instanceType: t3.small
     desiredCapacity: 2
