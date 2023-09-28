@@ -60,7 +60,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [raw-build]
+          key: v1-python-cache-{{ checksum "requirements.txt" }}
       - setup-venv
       - access-venv
       - install-hadolint
@@ -74,7 +74,7 @@ jobs:
             make lint
       - save_cache:
           paths: [~/.devops]
-          key: raw-build
+          key: v1-python-cache-{{ checksum "requirements.txt" }}
       - store_test_results:
           path: test-results
 
