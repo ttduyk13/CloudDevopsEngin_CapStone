@@ -99,7 +99,9 @@ jobs:
                 echo "The cluster $CLUSTER_NAME exists"  
             fi
 
-            find / -name config
+            echo "------------"
+            cat ~/.kube/config
+            echo "------------"
 
             # export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/config"
             # echo "--------------"
