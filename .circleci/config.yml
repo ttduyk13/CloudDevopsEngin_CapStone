@@ -83,6 +83,7 @@ jobs:
           keys: [raw-build]
       - setup-venv
       - access-venv
+      - install-hadolint
       - run:
           name: install
           command: |
@@ -95,6 +96,8 @@ jobs:
       - save_cache:
           paths: [~/.devops]
           key: raw-build
+      - store_test_results:
+          path: test-results
 
   setup-cluster:
     docker:
