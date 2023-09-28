@@ -2,7 +2,7 @@
 
 # build a docker image
 echo "Build docker image"
-IMAGE_NAME="duytt10-clouddevopsengin-capstone:${1:-lastest}"
+IMAGE_NAME="duytt10-clouddevopsengin-capstone:${1:-latest}"
 docker build -t "$IMAGE_NAME" .
 
 # Authenticate to your default registry
@@ -23,5 +23,6 @@ fi
 
 # Push an image to Amazon ECR'
 docker images
-docker tag "${IMAGE_NAME}" ${ECR_URL}/${REPO_NAME}:"${1:-lastest}"
-docker push ${ECR_URL}/${REPO_NAME}:"${1:-lastest}"
+docker tag "${IMAGE_NAME}" ${ECR_URL}/${REPO_NAME}:"${1:-latest}"
+docker push ${ECR_URL}/${REPO_NAME}:"${1:-latest}"
+echo "push docker image with tag ${1:-latest} sucessfully"
