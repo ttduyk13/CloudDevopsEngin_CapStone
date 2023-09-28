@@ -68,9 +68,12 @@ jobs:
           name: install
           command: |
             make install 
+            export AHIHI="ahoho"
+            echo $AHIHI
       - run:
           name: lint and test check
           command: |
+            echo $AHIHI
             make lint
       - save_cache:
           paths: [~/.devops]
@@ -116,13 +119,45 @@ jobs:
             echo "current docker image tag: ${CIRCLE_WORKFLOW_ID:0:7}"
             bash upload_docker.sh ${CIRCLE_WORKFLOW_ID:0:7}
 
+  deploy:
+    docker:
+      - image: cimg/python:3.7
+    steps:
+      - checkout
+      - install-kubectl
+      - run:
+          name: 
+
+          command: |
+            DEPLOYMENT_NAME="duytt10-capstone-deployment"
+
+            # Create config map for image tag
+            kubectl create configmap duytt10-capstone-config --from-literal=IMAGE_TAG=${CIRCLE_WORKFLOW_ID:0:7}
+
+            kubectl apply -f ./.circleci/cluster/deployment.yml
+
+            kubectl describe pod
+
+            kubectl delete deployment $DEPLOYMENT_NAME
+
+            
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 
 workflows:
   default:
     jobs:
-      - setup-cluster
-      - test-build
-      - build-docker:
-          requires: [setup-cluster, test-build]
+      # - setup-cluster
+      # - test-build
+      # - build-docker:
+      #     requires: [setup-cluster, test-build]
+      #     filters:
+      #       branches:
+      #         only: main
+      # - deploy:
+      #     requires: [build-docker]
+      #     filters:
+      #       branches:
+      #         only: main
+        - deploy
