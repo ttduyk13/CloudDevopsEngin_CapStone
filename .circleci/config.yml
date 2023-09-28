@@ -99,13 +99,15 @@ jobs:
                 echo "The cluster $CLUSTER_NAME exists"  
             fi
 
-            export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/config"
-            echo "--------------"
-            echo $KUBECONFIG
-            echo "--------------"
-            
-            export KUBECONFIG_CLUSTER=~/.kube/${CLUSTER_NAME}
-            echo $KUBECONFIG_CLUSTER
+            find / -name config
+
+            # export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/config"
+            # echo "--------------"
+            # echo $KUBECONFIG
+            # echo "--------------"
+
+            # export KUBECONFIG_CLUSTER=~/.kube/${CLUSTER_NAME}
+            # echo $KUBECONFIG_CLUSTER
 
   build-docker:
     docker:
