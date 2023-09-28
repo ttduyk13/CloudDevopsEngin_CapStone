@@ -74,7 +74,7 @@ commands:
             --stack-name udapeople-frontend-<<parameters.workflow_id>>
 
 jobs:
-  build:
+  test-build:
     docker:
       - image: cimg/python:3.7
     steps:
@@ -86,25 +86,15 @@ jobs:
       - run:
           name: install
           command: |
-            make install
-      - save_cache:
-          paths: [~/.devops]
-          key: raw-build
-
-  test:
-    docker:
-      - image: cimg/python:3.7
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [raw-build]
-      - install-hadolint
-      - access-venv
+            make install 
       - run:
           name: lint and test check
           command: |
             make lint
             make test
+      - save_cache:
+          paths: [~/.devops]
+          key: raw-build
 
   setup-cluster:
     docker:
@@ -148,6 +138,4 @@ workflows:
   default:
     jobs:
       - setup-cluster
-      - build
-      - test:
-          requires: [build]
+      - test-build
