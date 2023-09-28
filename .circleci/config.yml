@@ -67,19 +67,14 @@ jobs:
       - run:
           name: install
           command: |
-            make install 
-            export AHIHI="ahoho"
-            echo $AHIHI
+            make install
       - run:
           name: lint and test check
           command: |
-            echo $AHIHI
             make lint
       - save_cache:
           paths: [~/.devops]
           key: v1-python-cache-{{ checksum "requirements.txt" }}
-      - store_test_results:
-          path: test-results
 
   setup-cluster:
     docker:
@@ -105,9 +100,10 @@ jobs:
             fi
 
             export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/config"
+            echo "--------------"
             echo $KUBECONFIG
-
-            ls ~/.kube
+            echo "--------------"
+            
             export KUBECONFIG_CLUSTER=~/.kube/${CLUSTER_NAME}
             echo $KUBECONFIG_CLUSTER
 
