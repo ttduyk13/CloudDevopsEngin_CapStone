@@ -104,6 +104,13 @@ jobs:
                 echo "The cluster $CLUSTER_NAME exists"  
             fi
 
+            export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/config"
+            echo $KUBECONFIG
+
+            ls ~/.kube
+            export KUBECONFIG_CLUSTER=~/.kube/${CLUSTER_NAME}
+            echo $KUBECONFIG_CLUSTER
+
   build-docker:
     docker:
       - image: cimg/python:3.7
@@ -132,6 +139,7 @@ jobs:
             DEPLOYMENT_NAME="duytt10-capstone-deployment"
 
             # Create config map for image tag
+            kubectl get nodes
             kubectl create configmap duytt10-capstone-config --from-literal=IMAGE_TAG=${CIRCLE_WORKFLOW_ID:0:7}
 
             kubectl apply -f ./.circleci/cluster/deployment.yml
@@ -148,16 +156,15 @@ jobs:
 workflows:
   default:
     jobs:
-      # - setup-cluster
-      # - test-build
-      # - build-docker:
-      #     requires: [setup-cluster, test-build]
-      #     filters:
-      #       branches:
-      #         only: main
-      # - deploy:
-      #     requires: [build-docker]
-      #     filters:
-      #       branches:
-      #         only: main
-        - deploy
+      - setup-cluster
+      - test-build
+      - build-docker:
+          requires: [setup-cluster, test-build]
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires: [build-docker]
+          filters:
+            branches:
+              only: main
