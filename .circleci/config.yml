@@ -94,9 +94,10 @@ jobs:
             if [[ $cluster_info ]]; then
                 echo "The cluster $CLUSTER_NAME does not exist"
                 eksctl create cluster -f .circleci/cluster/cluster.yml
-                kubectl get nodes
+                kubectl get nodes -v6
             else
                 echo "The cluster $CLUSTER_NAME exists"  
+                kubectl get nodes -v6
             fi
 
             echo "------------"
