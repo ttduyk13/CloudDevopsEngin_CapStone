@@ -71,6 +71,7 @@ jobs:
       - run:
           name: lint and test check
           command: |
+            cat Dockerfile
             make lint
       - save_cache:
           paths: [~/.devops]
