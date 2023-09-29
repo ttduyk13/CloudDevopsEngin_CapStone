@@ -169,13 +169,15 @@ jobs:
             kubectl get service $SERVICE_NAME
             
             echo "1"
-            kubectl get service $SERVICE_NAME -o jsonpath='{.status}
+            kubectl get servicse $SERVICE_NAME -o jsonpath='{.status}
 
             echo "2"
-            kubectl get service $SERVICE_NAME -o jsonpath='{.status.loadBalancer}'
-            
+            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer}'
+
             echo "3"
-            kubectl get service $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0]}'
+
+            kubectl get servicse $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
             kubectl delete deployment $DEPLOYMENT_NAME
             kubectl delete service $SERVICE_NAME
 
