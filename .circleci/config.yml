@@ -186,7 +186,17 @@ jobs:
           command: |
               URL=$(cat url.txt)
               PORT=80
-              bash make_prediction.sh $URL $PORT
+              ENDPOINT="${URL}:${PORT}/predict"
+              echo "Endpoint: ${ENDPOINT}"
+              RES=$(bash make_prediction.sh $URL $PORT | grep -i -P '200|"prediction": ')
+
+              if [[ $RES ]]; then
+                printf "Successful POST request"
+                exit 1;
+              else
+                printf "failed to make a POST request to ${ENDPOINT}"
+                exit 0;
+              fi
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
