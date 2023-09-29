@@ -173,7 +173,7 @@ jobs:
             kubectl get service $SERVICE_NAME
 
             printf "Get loadbalancer url\n"
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status}'
+            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress}'
             URL=$(kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
             echo URL > url.txt
@@ -182,15 +182,15 @@ jobs:
 
             # kubectl delete deployment $DEPLOYMENT_NAME
             # kubectl delete service $SERVICE_NAME
-            kubectl set image deployments/duytt10-capstone-deployment my-server=041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            # kubectl set image deployments/duytt10-capstone-deployment my-server=041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:${CIRCLE_WORKFLOW_ID:0:7}
 
-            kubectl get pods --selector=app=my-server
+            # kubectl get pods --selector=app=my-server
 
-            kubectl describe services/duytt10-capstone-service
-            export NODE_PORT="$(kubectl get services/duytt10-capstone-service -o go-template='{{(index .spec.ports 0).nodePort}}')"
-            echo "NODE_PORT=$NODE_PORT"
+            # kubectl describe services/duytt10-capstone-service
+            # export NODE_PORT="$(kubectl get services/duytt10-capstone-service -o go-template='{{(index .spec.ports 0).nodePort}}')"
+            # echo "NODE_PORT=$NODE_PORT"
 
-            kubectl rollout status deployments/duytt10-capstone-deployment
+            # kubectl rollout status deployments/duytt10-capstone-deployment
       - persist_to_workspace:
           root: ~/
           paths:
