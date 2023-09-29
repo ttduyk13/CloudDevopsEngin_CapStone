@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-PORT=${1:-8000}
+PORT=${2:-8000}
 echo "Port: $PORT"
+URL=${1:-http://localhost}
 
 # POST method predict
 curl -d '{  
@@ -25,4 +26,4 @@ curl -d '{
    }
 }'\
      -H "Content-Type: application/json" \
-     -X POST http://localhost:$PORT/predict
+     -X POST $URL:$PORT/predict
