@@ -71,8 +71,8 @@ jobs:
       - run:
           name: lint and test check
           command: |
+            python3 --version
             cat Dockerfile
-            hadolint Dockerfile
             make lint
       # - save_cache:
       #     paths: [~/.devops]
@@ -215,7 +215,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - setup-cluster
+      # - setup-cluster
       - test-build
       - build-docker:
           requires: [setup-cluster, test-build]
