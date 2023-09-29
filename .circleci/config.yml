@@ -136,6 +136,7 @@ jobs:
       - image: cimg/python:3.7
     steps:
       - checkout
+      - install-awscli
       - install-kubectl
       - run:
           name: persist config
