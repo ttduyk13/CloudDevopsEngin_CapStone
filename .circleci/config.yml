@@ -151,7 +151,16 @@ jobs:
 
             # Create config map for image tag
             kubectl get nodes
-            kubectl create configmap duytt10-capstone-config --from-literal=IMAGE_TAG=${CIRCLE_WORKFLOW_ID:0:7}
+
+            export CONFIGMAP_NAME="duytt10-capstone-config"
+            configmap_info=$(kubectl describe configmap $CONFIGMAP_NAME  2>&1 | grep -i -w "NotFound") || true
+            if [[ $configmap_info ]]; then
+              echo "Configmap $CONFIGMAP_NAME doesn't exist"
+              kubectl create configmap $CONFIGMAP_NAME --from-literal=IMAGE_TAG=${CIRCLE_WORKFLOW_ID:0:7}
+            else
+              echo "Update configmap $CONFIGMAP_NAME"
+              kubectl patch configmap duytt10-capstone-config --patch='{"data": {"IMAGE_TAG": "'"${CIRCLE_WORKFLOW_ID:0:7}"'"}}'
+            fi
 
             kubectl apply -f ./.circleci/cluster/deployment.yml
 
