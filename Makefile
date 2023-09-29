@@ -24,6 +24,7 @@ lint:
 	# See local hadolint install instructions:   https://github.com/hadolint/hadolint
 	# This is linter for Dockerfiles
 	@if test -f Dockerfile ; then\
+		cat Dockerfile\
 		hadolint Dockerfile;\
 	else\
 		echo "Dockerfile doesn't found"\
