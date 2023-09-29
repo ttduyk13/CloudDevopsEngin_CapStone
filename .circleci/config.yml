@@ -71,7 +71,8 @@ jobs:
       - run:
           name: lint and test check
           command: |
-            make lint
+            # make lint
+            hadolint Dockerfile
       - save_cache:
           paths: [~/.devops]
           key: v1-python-cache-{{ checksum "requirements.txt" }}
