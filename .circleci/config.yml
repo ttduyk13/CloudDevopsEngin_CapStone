@@ -163,22 +163,25 @@ jobs:
             #   kubectl patch configmap duytt10-capstone-config --patch='{"data": {"IMAGE_TAG": "'"${CIRCLE_WORKFLOW_ID:0:7}"'"}}'
             # fi
 
-            printf "Apply deployment"
+            printf "Apply deployment\n"
             kubectl apply -f ./.circleci/cluster/deployment.yml
 
-            printf "Apply service"
+            printf "Apply service\n"
             kubectl apply -f ./.circleci/cluster/service.yml
 
             kubectl get deployment $DEPLOYMENT_NAME
             kubectl get service $SERVICE_NAME
 
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' > url.txt
+            printf "Get loadbalancer url\n"
+            URL=$(kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+            echo URL > url.txt
 
             cat url.txt
 
             # kubectl delete deployment $DEPLOYMENT_NAME
             # kubectl delete service $SERVICE_NAME
-            kubectl set image deployments/duytt10-capstone-deployment my-server=j041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:${CIRCLE_WORKFLOW_ID:0:7}
+            kubectl set image deployments/duytt10-capstone-deployment my-server=041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:${CIRCLE_WORKFLOW_ID:0:7}
 
             kubectl get pods --selector=app=my-server
 
