@@ -87,30 +87,34 @@ jobs:
       - run:
           name: Setup eks
           command: |
-            export CLUSTER_NAME="DuyTT10-capstone-cluster"
+            export CLUSTER_NAME="duyt10-capstone-cluster"
+            export REGION="us-east-1"
             echo "cluster name: ${CLUSTER_NAME}"
-            cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region us-east-1  2>&1 | grep -i -w "ResourceNotFoundException") || true
+            cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region $REGION  2>&1 | grep -i -w "ResourceNotFoundException") || true
 
             if [[ $cluster_info ]]; then
                 echo "The cluster $CLUSTER_NAME does not exist"
                 eksctl create cluster -f .circleci/cluster/cluster.yml
                 kubectl get nodes -v6
+
+                export BUCKET_NAME="duytt10-capstone"
+                bucket_info=$aws s3api head-bucket --bucket $BUCKET_NAME  2>&1 | grep -i -w "404") || true
+                if [[ $bucket_info ]]; then
+                  echo "Bucket $BUCKET_NAME doesn't exist"
+                  aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION
+                else
+                  echo "Bucket $BUCKET_NAME exists"
+                fi
+
+                if test -f ~/.kube/config; then
+                  aws s3 cp ~/.kube/config s3://$BUCKET_NAME/.kube/config
+                else
+                  exit 1;
+                fi
+
             else
-                echo "The cluster $CLUSTER_NAME exists"  
-                kubectl get nodes -v6
+                echo "The cluster $CLUSTER_NAME exists"
             fi
-
-            echo "------------"
-            cat ~/.kube/config
-            echo "------------"
-
-            # export KUBECONFIG="${KUBECONFIG}:${HOME}/.kube/config"
-            # echo "--------------"
-            # echo $KUBECONFIG
-            # echo "--------------"
-
-            # export KUBECONFIG_CLUSTER=~/.kube/${CLUSTER_NAME}
-            # echo $KUBECONFIG_CLUSTER
 
   build-docker:
     docker:
@@ -133,6 +137,11 @@ jobs:
     steps:
       - checkout
       - install-kubectl
+      - run:
+          name: persist config
+          command: |
+            aws s3 cp s3://$BUCKET_NAME/.kube/config ~/.kube/config
+            export KUBECONFIG="${KUBECONFIG}:~/.kube/config"
       - run:
           name: 
 
