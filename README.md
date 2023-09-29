@@ -1,3 +1,6 @@
+
+[![<ttduyk13>](https://circleci.com/gh/ttduyk13/CloudDevopsEngin_CapStone.svg?style=svg)](https://circleci.com/gh/ttduyk13/CloudDevopsEngin_CapStone/?branch=main)
+
 # CloudDevopsEngin_CapStone
 Capstone Project Overview
 In this project you will apply the skills and knowledge which were developed throughout the Cloud DevOps Nanodegree program. These include:
