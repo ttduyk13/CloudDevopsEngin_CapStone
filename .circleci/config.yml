@@ -173,7 +173,8 @@ jobs:
             kubectl get service $SERVICE_NAME
 
             printf "Get loadbalancer url\n"
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress}'
+            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0]}'
+            
             URL=$(kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
             echo URL > url.txt
@@ -191,10 +192,6 @@ jobs:
             # echo "NODE_PORT=$NODE_PORT"
 
             # kubectl rollout status deployments/duytt10-capstone-deployment
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/.circleci/url.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
