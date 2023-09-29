@@ -153,35 +153,44 @@ jobs:
             # Create config map for image tag
             kubectl get nodes
 
-            export CONFIGMAP_NAME="duytt10-capstone-config"
-            configmap_info=$(kubectl describe configmap $CONFIGMAP_NAME  2>&1 | grep -i -w "NotFound") || true
-            if [[ $configmap_info ]]; then
-              echo "Configmap $CONFIGMAP_NAME doesn't exist"
-              kubectl create configmap $CONFIGMAP_NAME --from-literal=IMAGE_TAG=${CIRCLE_WORKFLOW_ID:0:7}
-            else
-              echo "Update configmap $CONFIGMAP_NAME"
-              kubectl patch configmap duytt10-capstone-config --patch='{"data": {"IMAGE_TAG": "'"${CIRCLE_WORKFLOW_ID:0:7}"'"}}'
-            fi
+            # export CONFIGMAP_NAME="duytt10-capstone-config"
+            # configmap_info=$(kubectl describe configmap $CONFIGMAP_NAME  2>&1 | grep -i -w "NotFound") || true
+            # if [[ $configmap_info ]]; then
+            #   echo "Configmap $CONFIGMAP_NAME doesn't exist"
+            #   kubectl create configmap $CONFIGMAP_NAME --from-literal=IMAGE_TAG=${CIRCLE_WORKFLOW_ID:0:7}
+            # else
+            #   printf "Update configmap $CONFIGMAP_NAME"
+            #   kubectl patch configmap duytt10-capstone-config --patch='{"data": {"IMAGE_TAG": "'"${CIRCLE_WORKFLOW_ID:0:7}"'"}}'
+            # fi
 
+            printf "Apply deployment"
             kubectl apply -f ./.circleci/cluster/deployment.yml
+
+            printf "Apply service"
             kubectl apply -f ./.circleci/cluster/service.yml
+
             kubectl get deployment $DEPLOYMENT_NAME
             kubectl get service $SERVICE_NAME
-            
-            echo "1"
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status}'
 
-            echo "2"
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer}'
+            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' > url.txt
 
-            echo "3"
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0]}'
+            cat url.txt
 
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-            kubectl delete deployment $DEPLOYMENT_NAME
-            kubectl delete service $SERVICE_NAME
+            # kubectl delete deployment $DEPLOYMENT_NAME
+            # kubectl delete service $SERVICE_NAME
+            kubectl set image deployments/duytt10-capstone-deployment my-server=j041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:${CIRCLE_WORKFLOW_ID:0:7}
 
-            
+            kubectl get pods --selector=app=my-server
+
+            kubectl describe services/duytt10-capstone-service
+            export NODE_PORT="$(kubectl get services/duytt10-capstone-service -o go-template='{{(index .spec.ports 0).nodePort}}')"
+            echo "NODE_PORT=$NODE_PORT"
+
+            kubectl rollout status deployments/duytt10-capstone-deployment
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/url.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
