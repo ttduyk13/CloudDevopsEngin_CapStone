@@ -173,8 +173,8 @@ jobs:
             kubectl get service $SERVICE_NAME
 
             printf "Get loadbalancer url\n"
-            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0]}'
-            
+            kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+            printf "\n---\n"
             URL=$(kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
             echo URL > url.txt
