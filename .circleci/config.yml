@@ -169,7 +169,7 @@ jobs:
             kubectl get service $SERVICE_NAME
             
             echo "1"
-            kubectl get servicse $SERVICE_NAME -o jsonpath='{.status}
+            kubectl get servicse $SERVICE_NAME -o jsonpath='{.status}'
 
             echo "2"
             kubectl get services $SERVICE_NAME -o jsonpath='{.status.loadBalancer}'
