@@ -87,7 +87,7 @@ jobs:
       - run:
           name: Setup eks
           command: |
-            export CLUSTER_NAME="duyt10-capstone-cluster"
+            export CLUSTER_NAME="duytt10-capstone-cluster"
             export REGION="us-east-1"
             echo "cluster name: ${CLUSTER_NAME}"
             cluster_info=$(aws eks describe-cluster --name $CLUSTER_NAME --region $REGION  2>&1 | grep -i -w "ResourceNotFoundException") || true
