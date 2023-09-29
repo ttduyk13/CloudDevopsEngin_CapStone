@@ -215,7 +215,10 @@ jobs:
 workflows:
   default:
     jobs:
-      # - setup-cluster
+      - setup-cluster:
+          filters:
+            branches:
+              only: main
       - test-build
       - build-docker:
           requires: [setup-cluster, test-build]
