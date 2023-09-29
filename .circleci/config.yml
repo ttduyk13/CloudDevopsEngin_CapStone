@@ -192,7 +192,7 @@ jobs:
 
             if [[ $RES ]]; then
               printf "Successful POST request"
-              kubectl logs podname -c duytt10-capstone
+              kubectl get events
               exit 0;
             else
               printf "failed to make a POST request to ${ENDPOINT}"
