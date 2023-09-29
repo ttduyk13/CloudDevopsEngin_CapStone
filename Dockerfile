@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir --upgrade pip==21.3.1 && pip install --no-cache-d
 
 ## Step 4:
 # Expose port 80
-EXPOSE 80000
+EXPOSE 80000dsa
 
 ## Step 5:
 # Run app.py at container launch
