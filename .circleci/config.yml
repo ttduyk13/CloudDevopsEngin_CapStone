@@ -141,6 +141,7 @@ jobs:
       - run:
           name: persist config
           command: |
+            export BUCKET_NAME="duytt10-capstone"
             aws s3 cp s3://$BUCKET_NAME/.kube/config ~/.kube/config
             export KUBECONFIG="${KUBECONFIG}:~/.kube/config"
       - run:
