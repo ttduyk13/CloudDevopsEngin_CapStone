@@ -19,12 +19,12 @@ spec:
     spec:
       containers:
         - name: duytt10-capstone
-          image: 041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:cc4d93e
+          image: 041996649308.dkr.ecr.us-east-1.amazonaws.com/duytt10-clouddevopsengin-capstone:latest
           ports:
             - containerPort: 80
-          env:
-          - name: IMAGE_TAG
-            valueFrom:
-              configMapKeyRef:
-                name: duytt10-capstone-config
-                key: IMAGE_TAG
+          # env:
+          # - name: IMAGE_TAG
+          #   valueFrom:
+          #     configMapKeyRef:
+          #       name: duytt10-capstone-config
+          #       key: IMAGE_TAG
