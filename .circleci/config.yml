@@ -98,7 +98,7 @@ jobs:
                 kubectl get nodes -v6
 
                 export BUCKET_NAME="duytt10-capstone"
-                bucket_info=$aws s3api head-bucket --bucket $BUCKET_NAME  2>&1 | grep -i -w "404") || true
+                bucket_info=$(aws s3api head-bucket --bucket $BUCKET_NAME  2>&1 | grep -i -w "404") || true
                 if [[ $bucket_info ]]; then
                   echo "Bucket $BUCKET_NAME doesn't exist"
                   aws s3api create-bucket --bucket $BUCKET_NAME --region $REGION
