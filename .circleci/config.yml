@@ -164,7 +164,7 @@ jobs:
             fi
 
             kubectl apply -f ./.circleci/cluster/deployment.yml
-            kubectl apply -f ./.circleci/cluster/serivce.yml
+            kubectl apply -f ./.circleci/cluster/service.yml
             kubectl get deployment $DEPLOYMENT_NAME
             kubectl get service $SERVICE_NAME
             # echo $(kubectl get services loadbalancer -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
