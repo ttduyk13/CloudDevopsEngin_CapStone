@@ -188,9 +188,10 @@ jobs:
             # export NODE_PORT="$(kubectl get services/duytt10-capstone-service -o go-template='{{(index .spec.ports 0).nodePort}}')"
             # echo "NODE_PORT=$NODE_PORT"
 
+            kubectl get deployment $DEPLOYMENT_NAME
             kubectl rollout status deployments/duytt10-capstone-deployment
             kubectl get pods
-            kubectl get pods --selector=app=my-server
+            # kubectl get pods --selector=app=my-server
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
