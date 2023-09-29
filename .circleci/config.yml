@@ -166,6 +166,7 @@ jobs:
 
             kubectl get deployment $DEPLOYMENT_NAME
             kubectl describe pod
+            kubectl get deployment $DEPLOYMENT_NAME
 
             kubectl delete deployment $DEPLOYMENT_NAME
 
