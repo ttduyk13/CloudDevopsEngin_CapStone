@@ -63,11 +63,11 @@ jobs:
       #     key: v1-python-cache-{{ checksum "requirements.txt" }}
       # - setup-venv
       # - access-venv
-      - install-hadolint
-      - run:
-          name: install
-          command: |
-            make install
+      # - install-hadolint
+      # - run:
+      #     name: install
+      #     command: |
+      #       make install
       - run:
           name: lint and test check
           command: |
