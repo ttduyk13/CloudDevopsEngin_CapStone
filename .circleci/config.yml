@@ -180,7 +180,9 @@ jobs:
             RES=$(bash make_prediction.sh $URL $PORT | grep -i -P '200|"prediction": ')
 
             if [[ $RES ]]; then
-              printf "Successful POST request"
+              printf "Successful POST request\n"
+
+              kubectl get pods --field-selector=status.phase=Running
               
               pod_names=$(kubectl get pods --field-selector=status.phase=Running -o jsonpath='{.items[*].metadata.name}')
 
