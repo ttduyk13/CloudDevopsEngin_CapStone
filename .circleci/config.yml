@@ -59,8 +59,8 @@ jobs:
       - image: cimg/python:3.7
     steps:
       - checkout
-      - restore_cache:
-          key: v1-python-cache-{{ checksum "requirements.txt" }}
+      # - restore_cache:
+      #     key: v1-python-cache-{{ checksum "requirements.txt" }}
       - setup-venv
       - access-venv
       - install-hadolint
@@ -71,11 +71,10 @@ jobs:
       - run:
           name: lint and test check
           command: |
-            # make lint
-            hadolint Dockerfile
-      - save_cache:
-          paths: [~/.devops]
-          key: v1-python-cache-{{ checksum "requirements.txt" }}
+            make lint
+      # - save_cache:
+      #     paths: [~/.devops]
+      #     key: v1-python-cache-{{ checksum "requirements.txt" }}
 
   setup-cluster:
     docker:
