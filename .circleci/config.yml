@@ -30,6 +30,7 @@ commands:
             mkdir -p $HOME/bin && cp hadolint-Linux-x86_64 $HOME/bin/hadolint && export PATH=$HOME/bin:$PATH
             echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
             hadolint --version
+            echo "$(which hadolint) ???"
             echo "???"
   install-eksctl:
     steps:
