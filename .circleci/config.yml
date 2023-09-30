@@ -20,16 +20,6 @@ commands:
             mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
             echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
             kubectl version --short --client
-  install-hadolint:
-    steps:
-      - run:
-          name: Install hadolint
-          command: |
-            curl -O https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-            chmod +x hadolint-Linux-x86_64
-            mkdir -p $HOME/bin && cp hadolint-Linux-x86_64 $HOME/bin/hadolint && export PATH=$HOME/bin:$PATH
-            echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
-            hadolint --version
   install-eksctl:
     steps:
       - run:
@@ -63,7 +53,6 @@ jobs:
           key: v1-python-cache-{{ checksum "requirements.txt" }}
       - setup-venv
       - access-venv
-      - install-hadolint
       - run:
           name: install
           command: |
@@ -71,8 +60,7 @@ jobs:
       - run:
           name: lint and test check
           command: |
-            # make lint
-            hadolint Dockerfile
+            make lint
       - save_cache:
           paths: [~/.devops]
           key: v1-python-cache-{{ checksum "requirements.txt" }}
