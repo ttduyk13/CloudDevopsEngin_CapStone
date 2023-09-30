@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 ## Step 4:
 # Expose port 80
-EXPOSE 800000
+EXPOSE 80ads
 
 ## Step 5:
 # Run app.py at container launch

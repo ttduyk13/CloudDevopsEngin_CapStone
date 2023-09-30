@@ -25,7 +25,7 @@ lint:
 	# This is linter for Dockerfiles
 	@if test -f Dockerfile ; then\
 		cat Dockerfile;\
-		hadolint Dockerfile;\
+		hadolint Dockerfile --strict;\
 	else\
 		echo "Dockerfile doesn't found"\
 		exit 0;\
