@@ -18,7 +18,7 @@ RUN exit 1
 
 ## Step 4:
 # Expose port 80
-EXPOSE 80ads
+EXPOSEEE 80ads
 
 ## Step 5:
 # Run app.py at container launch
