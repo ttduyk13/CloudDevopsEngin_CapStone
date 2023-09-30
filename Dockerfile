@@ -14,11 +14,10 @@ COPY . /app/app.py /app/
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip==21.3.1
 RUN pip install --no-cache-dir -r requirements.txt
-RUN exit 1
 
 ## Step 4:
 # Expose port 80
-EXPOSEEE 80ads
+EXPOSE 80
 
 ## Step 5:
 # Run app.py at container launch
