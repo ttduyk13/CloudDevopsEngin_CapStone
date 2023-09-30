@@ -63,7 +63,7 @@ jobs:
       #     key: v1-python-cache-{{ checksum "requirements.txt" }}
       # - setup-venv
       # - access-venv
-      # - install-hadolint
+      - install-hadolint
       # - run:
       #     name: install
       #     command: |
