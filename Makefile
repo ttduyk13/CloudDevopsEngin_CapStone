@@ -23,24 +23,10 @@ test:
 lint:
 	# See local hadolint install instructions:   https://github.com/hadolint/hadolint
 	# This is linter for Dockerfiles
-	@if test -f Dockerfile ; then\
-		cat Dockerfile;\
-		printf "hadolint check";\
-		hadolint Dockerfile;\
-	else\
-		echo "Dockerfile doesn't found"\
-		exit 0;\
-	fi
-
+	hadolint --version
+	hadolint Dockerfile
 	# This is a linter for Python source code linter: https://www.pylint.org/
 	# This should be run from inside a virtualenv
-	@if test -f ./app/app.py ; then\
-		printf "pylint check";\
-		pylint --disable=R,C,W1203,W1202 ./app/app.py;\
-	else\
-		echo "appp.py doesn't found";\
-		ls -l app;\
-		exit 0;\
-	fi
+	pylint --disable=R,C,W1203,W1202 app.py
 
 all: install lint test
