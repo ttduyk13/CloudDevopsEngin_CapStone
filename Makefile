@@ -13,8 +13,8 @@ setup:
 install:
 	# This should be run from inside a virtualenv
 	pip install --no-cache-dir --upgrade pip==21.3.1 &&\
-		pip install -r requirements.txt &&\
-		wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 &&\
+		pip install -r requirements.txt
+	sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 &&\
 		sudo chmod +x /bin/hadolint
 
 test:
