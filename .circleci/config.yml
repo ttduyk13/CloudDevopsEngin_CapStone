@@ -182,7 +182,7 @@ jobs:
             if [[ $RES ]]; then
               printf "Successful POST request"
               
-              pod_names=$(kubectl get pods -o jsonpath='{.items[*].metadata.name}')
+              pod_names=$(kubectl get pods --field-selector=status.phase=Running -o jsonpath='{.items[*].metadata.name}')
 
               # Loop through the pod names
               for pod_name in $pod_names; do
