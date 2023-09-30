@@ -64,10 +64,10 @@ jobs:
       # - setup-venv
       # - access-venv
       - install-hadolint
-      # - run:
-      #     name: install
-      #     command: |
-      #       make install
+      - run:
+          name: install
+          command: |
+            make install
       - run:
           name: lint and test check
           command: |
