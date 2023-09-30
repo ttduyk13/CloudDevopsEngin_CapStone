@@ -12,12 +12,11 @@ COPY . /app/app.py /app/
 # Install packages from requirements.txt
 # hadolint ignore=DL3013
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip==21.3.1
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip==21.3.1 && pip install --no-cache-dir -r requirements.txt
 
 ## Step 4:
 # Expose port 80
-EXPOSE 800000
+EXPOSE 80
 
 ## Step 5:
 # Run app.py at container launch

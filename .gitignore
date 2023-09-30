@@ -1,2 +1,3 @@
 .python-version
 test.sh
+.circleci/cluster/cluster-test.yml
