@@ -62,19 +62,24 @@ jobs:
       - image: cimg/python:3.7
     steps:
       - checkout
+      - setup_remote_docker
       # - restore_cache:
       #     key: v1-python-cache-{{ checksum "requirements.txt" }}
       # - setup-venv
       # - access-venv
-      - install-hadolint
+      # - install-hadolint
+
       - run:
           name: install
           command: |
             make install
+      # - run:
+      #     name: lint and test check
+      #     command: |
+      #       make lint
       - run:
-          name: lint and test check
-          command: |
-            make lint
+          name: Run hadolint
+          command: docker run --rm --interactive hadolint/hadolint < Dockerfile
       # - save_cache:
       #     paths: [~/.devops]
       #     key: v1-python-cache-{{ checksum "requirements.txt" }}
