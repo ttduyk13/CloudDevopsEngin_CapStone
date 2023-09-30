@@ -31,7 +31,7 @@ commands:
             echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
             hadolint --version
             echo "$(which hadolint) ???"
-            echo $(hadolint --version)
+            echo "$(/home/circleci/bin/hadolint --version) ???"
             echo "???"
   install-eksctl:
     steps:
